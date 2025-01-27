@@ -8,7 +8,6 @@ prisma/dev.db
 prisma/migrations/
 
 # Environment files
-.env
 
 # Logs
 *.log
