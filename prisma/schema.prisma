@@ -14,7 +14,7 @@ datasource db {
 }
 
 model AIT {
-  id            Int      @id @default(autoincrement())
+  id            String   @id @default(uuid())
   placa_veiculo String
   data_infracao DateTime
   descricao     String
