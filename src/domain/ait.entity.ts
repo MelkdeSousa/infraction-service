@@ -1,13 +1,13 @@
 import { z } from 'zod';
 import { handleSafeParseZod } from '../lib';
 
-export type AITProps = {
+export interface AITProps {
   id: string;
   placaVeiculo: string;
   dataInfracao: Date;
   descricao: string;
   valorMulta: number;
-};
+}
 
 export type AITJson = {
   id: string;
@@ -62,6 +62,10 @@ export class AIT {
       descricao: this._descricao,
       valor_multa: this._valorMulta,
     };
+  }
+
+  public get id() {
+    return this._id;
   }
 
   static create(props: AITProps): [AIT | null, Error | null] {
