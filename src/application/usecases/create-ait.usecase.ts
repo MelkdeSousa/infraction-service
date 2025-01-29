@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ICreateAITContract } from '../contracts/usecases/create-ait.contract';
-import { IAITRepository } from '../contracts/repositories/ait.repository';
-import { AIT } from '../../domain';
+import { IAITRepository } from 'application/contracts/repositories/ait.repository';
+import { ICreateAITContract } from 'application/contracts/usecases/create-ait.contract';
+
+import { AIT } from 'domain/ait.entity';
 
 @Injectable()
 export class CreateAITUseCase implements ICreateAITContract {

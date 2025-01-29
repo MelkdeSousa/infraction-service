@@ -1,4 +1,4 @@
-import { AIT } from '../../../domain';
+import { AIT } from 'domain/ait.entity';
 
 export interface GetListAitsResponse {
   aits: AIT[];
@@ -12,9 +12,11 @@ export abstract class IAITRepository {
     page: number,
   ): Promise<GetListAitsResponse | null>;
 
-  abstract findByPlacaVeiculo(placaVeiculo: string): Promise<AIT | null>;
+  abstract findByPlacaVeiculo(placaVeiculo: string): Promise<AIT[]>;
 
   abstract update(id: string, ait: AIT): Promise<void>;
 
   abstract removeById(id: string): Promise<AIT | null>;
+
+  abstract findById(id: string): Promise<AIT | null>;
 }

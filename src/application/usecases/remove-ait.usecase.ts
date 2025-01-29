@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { IAITRepository } from '../contracts/repositories/ait.repository';
-import { IRemoveAITContract } from '../contracts/usecases/remove-ait.contract';
-import { AIT } from '../../domain';
+import { IAITRepository } from 'application/contracts/repositories/ait.repository';
+import { IRemoveAITContract } from 'application/contracts/usecases/remove-ait.contract';
+
+import { AIT } from 'domain/ait.entity';
 
 interface RemoveAITRequest {
   id: string;

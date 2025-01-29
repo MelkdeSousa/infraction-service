@@ -1,32 +1,24 @@
 import { z } from 'zod';
-import { handleSafeParseZod } from '../lib';
+
+import { Decimal } from '@prisma/client/runtime/library';
+import { handleSafeParseZod } from 'src/lib/handleSafeParseZod';
 
 export interface AITProps {
-  id: string;
   placaVeiculo: string;
   dataInfracao: Date;
   descricao: string;
-  valorMulta: number;
+  valorMulta: Decimal;
 }
-
-export type AITJson = {
-  id: string;
-  placa_veiculo: string;
-  data_infracao: Date;
-  descricao: string;
-  valor_multa: number;
-};
 
 export class AIT {
   private _id: string;
   private _placaVeiculo: string;
   private _dataInfracao: Date;
   private _descricao: string;
-  private _valorMulta: number;
+  private _valorMulta: Decimal;
 
-  private constructor(props: AITProps) {
+  constructor(props: AITProps) {
     this.validate(props);
-    this._id = props.id;
     this._placaVeiculo = props.placaVeiculo;
     this._dataInfracao = props.dataInfracao;
     this._descricao = props.descricao;
@@ -35,7 +27,6 @@ export class AIT {
 
   private validate(props: AITProps): void {
     const schema = z.object({
-      id: z.string().uuid('id precisa ser um uuid válido'),
       placaVeiculo: z
         .string()
         .min(7, 'a placa do veículo precisa ter no mínimo 7 caracteres'),
@@ -45,27 +36,89 @@ export class AIT {
         .min(10, 'descrição precisa ter no mínimo 10 caracteres')
         .max(100, 'descrição precisa ter no máximo 100 caracteres'),
       valorMulta: z
-        .number()
-        .positive('o valor da multa precisa ser maior que zero'),
+        .instanceof(Decimal)
+        .refine((value) => value.gt(new Decimal(0)), {
+          message: 'o valor da multa precisa ser maior que zero',
+        }),
     });
 
     const result = schema.safeParse(props);
 
     if (result.success === false) throw handleSafeParseZod(result);
   }
-
-  public toJSON(): Readonly<AITJson> {
-    return {
-      id: this._id,
-      placa_veiculo: this._placaVeiculo,
-      data_infracao: this._dataInfracao,
-      descricao: this._descricao,
-      valor_multa: this._valorMulta,
+  public updateAIT(
+    placaVeiculo: string,
+    dataInfracao: Date,
+    descricao: string,
+    valorMulta: Decimal,
+  ) {
+    // Criando objeto com novos valores
+    const updatedProps: AITProps = {
+      placaVeiculo,
+      dataInfracao,
+      descricao,
+      valorMulta,
     };
-  }
 
+    // Revalidando os novos valores
+    this.validate(updatedProps);
+
+    // Atualizando os valores apenas se forem válidos
+    this._placaVeiculo = placaVeiculo;
+    this._dataInfracao = dataInfracao;
+    this._descricao = descricao;
+    this._valorMulta = valorMulta;
+  }
   public get id() {
     return this._id;
+  }
+
+  // Getters e Setters para os campos restantes
+
+  public get placaVeiculo() {
+    return this._placaVeiculo;
+  }
+
+  public set placaVeiculo(value: string) {
+    if (value.length < 7) {
+      throw new Error('A placa do veículo precisa ter no mínimo 7 caracteres');
+    }
+    this._placaVeiculo = value;
+  }
+
+  public get dataInfracao() {
+    return this._dataInfracao;
+  }
+
+  public set dataInfracao(value: Date) {
+    if (isNaN(value.getTime())) {
+      throw new Error('Data de infração inválida');
+    }
+    this._dataInfracao = value;
+  }
+
+  public get descricao() {
+    return this._descricao;
+  }
+
+  public set descricao(value: string) {
+    if (value.length < 10 || value.length > 100) {
+      throw new Error(
+        'Descrição precisa ter no mínimo 10 caracteres e no máximo 100 caracteres',
+      );
+    }
+    this._descricao = value;
+  }
+
+  public get valorMulta() {
+    return this._valorMulta;
+  }
+
+  public set valorMulta(value: Decimal) {
+    if (value.toNumber() <= 0) {
+      throw new Error('O valor da multa precisa ser maior que zero');
+    }
+    this._valorMulta = value;
   }
 
   static create(props: AITProps): [AIT | null, Error | null] {
