@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { IGetAITContract } from '../contracts/usecases/get-ait.contract';
-import { IAITRepository } from '../contracts/repositories/ait.repository';
-import { AIT } from '../../domain';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { IAITRepository } from 'application/contracts/repositories/ait.repository';
+import { IGetAITContract } from 'application/contracts/usecases/get-ait.contract';
+
+import { AIT } from 'domain/ait.entity';
 
 interface GetAITListResponse {
   data: {
@@ -18,16 +19,34 @@ interface GetAITListRequest {
 interface GetAITDetailRequest {
   placaVeiculo: string;
 }
+
+interface GetAitDetailRequest {
+  id: string;
+  dataInfracao: Date;
+  placaVeiculo: string;
+  descricao: string;
+  valorMulta: Number;
+}
 @Injectable()
 export class GetAITUseCase implements IGetAITContract {
   constructor(private aitRepository: IAITRepository) {}
-  async getByPlacaVeiculo(request: GetAITDetailRequest): Promise<AIT> {
-    const { placaVeiculo } = request;
-    const ait = await this.aitRepository.findByPlacaVeiculo(placaVeiculo);
+  async getById(request: GetAitDetailRequest): Promise<AIT> {
+    const { id } = request;
+    const ait = await this.aitRepository.findById(id);
     if (ait == null) {
-      throw Error('placa não encontrada');
+      throw new NotFoundException('Ait not found');
     }
     return ait;
+  }
+  async getByPlacaVeiculo(request: GetAITDetailRequest): Promise<AIT[]> {
+    const { placaVeiculo } = request;
+    const aits = await this.aitRepository.findByPlacaVeiculo(placaVeiculo);
+
+    if (!aits || aits.length === 0) {
+      throw new NotFoundException('Placa não encontrada');
+    }
+
+    return aits;
   }
 
   async getAll(request: GetAITListRequest): Promise<GetAITListResponse> {
