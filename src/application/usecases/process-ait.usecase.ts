@@ -4,10 +4,14 @@ import { createObjectCsvWriter } from 'csv-writer'; // Importando o csv-writer
 import { join } from 'path'; // Para manipular caminhos de arquivos
 import * as fs from 'fs';
 import * as iconv from 'iconv-lite'; // Para garantir a codificação correta dos caracteres especiais
+import { RabbitMQProducer } from 'src/infra/broker/rabbitmq/rabbitmq.producer';
 
 @Injectable()
 export class ProcessAITUseCase {
-  constructor(private readonly aitRepository: IAITRepository) {}
+  constructor(
+    private readonly aitRepository: IAITRepository,
+    private readonly rabbitMQProducer: RabbitMQProducer,
+  ) {}
 
   async processAndGenerateCsv(): Promise<string> {
     const dirPath = join(__dirname, '..', '..', 'exports');
@@ -51,6 +55,8 @@ export class ProcessAITUseCase {
     const csvContent = fs.readFileSync(filePath, 'utf-8');
     const bom = '\uFEFF'; // Byte Order Mark para UTF-8
     fs.writeFileSync(filePath, bom + csvContent, 'utf8');
+
+    await this.rabbitMQProducer.sendToQueue(filePath);
 
     return `Arquivo CSV gerado com sucesso! Caminho: ${filePath}`;
   }
