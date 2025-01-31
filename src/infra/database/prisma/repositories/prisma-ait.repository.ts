@@ -1,7 +1,7 @@
 import {
   GetListAitsResponse,
   IAITRepository,
-} from '@/application/contracts/repositories/ait.repository';
+} from '@/application/contracts/repositories/ait';
 import { Injectable } from '@nestjs/common';
 
 import { AIT } from '@/domain/ait.entity';
