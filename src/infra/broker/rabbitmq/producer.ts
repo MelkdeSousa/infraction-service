@@ -2,12 +2,8 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { Channel, Connection, connect } from 'amqplib';
 import { envs } from 'src/config/envs';
+import type { QueueMessage } from './consumer';
 
-interface QueueMessage {
-  id: string;
-  url: string;
-  timestamp: number;
-}
 
 @Injectable()
 export class RabbitMQProducer implements OnModuleInit, OnModuleDestroy {
