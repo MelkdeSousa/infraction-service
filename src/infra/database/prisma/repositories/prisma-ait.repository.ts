@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import {
-  IAITRepository,
   GetListAitsResponse,
+  IAITRepository,
 } from 'application/contracts/repositories/ait.repository';
 
 import { AIT } from 'domain/ait.entity';
-import { PrismaService } from '../prisma.service';
 import { AITMapper } from '../mappers/prisma-ait.mapper';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class PrismaAITRepository implements IAITRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
   async findById(id: string): Promise<AIT | null> {
     const ait = await this.prisma.aIT.findFirst({
       where: { id: id },
@@ -65,5 +65,25 @@ export class PrismaAITRepository implements IAITRepository {
 
     const result = AITMapper.toDomain(ait);
     return result;
+  }
+
+  async findByDateRange(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<GetListAitsResponse | null> {
+    const aitsData = await this.prisma.aIT.findMany({
+      where: {
+        data_infracao: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    });
+
+    const total = await this.prisma.aIT.count();
+
+    const aits = AITMapper.toDomainList(aitsData);
+
+    return { aits, total };
   }
 }

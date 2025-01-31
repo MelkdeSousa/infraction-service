@@ -19,4 +19,9 @@ export abstract class IAITRepository {
   abstract removeById(id: string): Promise<AIT | null>;
 
   abstract findById(id: string): Promise<AIT | null>;
+
+  abstract findByDateRange(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<GetListAitsResponse | null>;
 }
