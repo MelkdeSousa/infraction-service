@@ -1,3 +1,4 @@
+import { DatabaseModule } from '@/infra/database/database.module';
 import { Module } from '@nestjs/common';
 import { RABBITMQ_SERVICE } from 'src/config/constants';
 import { envs } from 'src/config/envs';
@@ -37,6 +38,7 @@ import { RabbitMQProducer } from './producer';
     },
     ProcessCSVConsumer,
   ],
-  exports: [RabbitMQProducer, ProcessCSVConsumer],
+  imports: [DatabaseModule],
+  exports: [RabbitMQProducer, ProcessCSVConsumer, RABBITMQ_SERVICE],
 })
 export class RabbitMQModule { }
