@@ -14,11 +14,11 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Decimal } from '@prisma/client/runtime/library';
 
-import type { ICreateAITContract } from '@/application/contracts/usecases/create-ait.contract';
-import type { IGetAITContract } from '@/application/contracts/usecases/get-ait.contract';
-import type { IRemoveAITContract } from '@/application/contracts/usecases/remove-ait.contract';
-import type { IUpdateAITContract } from '@/application/contracts/usecases/update-ait.contract';
+import type { CreateAITUseCase } from '@/application/usecases/create-ait.usecase';
+import type { GetAITUseCase } from '@/application/usecases/get-ait.usecase';
 import type { ProcessAITUseCase } from '@/application/usecases/process-ait.usecase';
+import type { RemoveAITUseCase } from '@/application/usecases/remove-ait.usecase';
+import type { UpdateAITUseCase } from '@/application/usecases/update-ait.usecase';
 import { AIT } from '@/domain/ait.entity';
 import { CreateAITInputDto, type ProcessAitsInputDTO, type UpdateAITInputDto } from '../dtos/ait';
 import { AITViewModel } from '../view-models/ait-view-model';
@@ -27,10 +27,10 @@ import { AITViewModel } from '../view-models/ait-view-model';
 @Controller('aits')
 export class AITController {
   constructor(
-    private readonly createAit: ICreateAITContract,
-    private readonly getAit: IGetAITContract,
-    private readonly updateAit: IUpdateAITContract,
-    private readonly removeAit: IRemoveAITContract,
+    private readonly createAit: CreateAITUseCase,
+    private readonly getAit: GetAITUseCase,
+    private readonly updateAit: UpdateAITUseCase,
+    private readonly removeAit: RemoveAITUseCase,
     private readonly processAITUseCase: ProcessAITUseCase,
   ) { }
   @ApiOperation({ summary: 'Create a new AIT' })

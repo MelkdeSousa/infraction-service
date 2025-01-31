@@ -1,5 +1,4 @@
-import { IAITRepository } from '@/application/contracts/repositories/ait.repository';
-import { IGetAITContract } from '@/application/contracts/usecases/get-ait.contract';
+import { IAITRepository } from '@/application/contracts/repositories/ait';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { AIT } from '@/domain/ait.entity';
@@ -25,11 +24,11 @@ interface GetAitDetailRequest {
   dataInfracao: Date;
   placaVeiculo: string;
   descricao: string;
-  valorMulta: Number;
+  valorMulta: number;
 }
 @Injectable()
-export class GetAITUseCase implements IGetAITContract {
-  constructor(private aitRepository: IAITRepository) { }
+export class GetAITUseCase {
+  constructor(private readonly aitRepository: IAITRepository) { }
   async getById(request: GetAitDetailRequest): Promise<AIT> {
     const { id } = request;
     const ait = await this.aitRepository.findById(id);

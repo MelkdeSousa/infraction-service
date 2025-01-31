@@ -1,5 +1,4 @@
-import { IAITRepository } from '@/application/contracts/repositories/ait.repository';
-import { IRemoveAITContract } from '@/application/contracts/usecases/remove-ait.contract';
+import { IAITRepository } from '@/application/contracts/repositories/ait';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { AIT } from '@/domain/ait.entity';
@@ -9,8 +8,8 @@ interface RemoveAITRequest {
 }
 
 @Injectable()
-export class RemoveAITUseCase implements IRemoveAITContract {
-  constructor(private aitRepository: IAITRepository) { }
+export class RemoveAITUseCase {
+  constructor(private readonly aitRepository: IAITRepository) { }
 
   async removeById(request: RemoveAITRequest): Promise<AIT> {
     const { id } = request;
