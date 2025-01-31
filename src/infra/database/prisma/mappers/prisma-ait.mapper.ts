@@ -6,12 +6,12 @@ import { AIT } from 'domain/ait.entity';
 export class AITMapper {
   // Método estático para mapear de Prisma para a entidade de domínio
   static toDomain(aitPrisma: AITPrisma): AIT {
-    return new AIT({
+    return AIT.create({
       placaVeiculo: aitPrisma.placa_veiculo,
       dataInfracao: aitPrisma.data_infracao,
       descricao: aitPrisma.descricao,
       valorMulta: aitPrisma.valor_multa,
-    });
+    })[0];
   }
 
   // Método estático para mapear de domínio para o formato que o Prisma espera
