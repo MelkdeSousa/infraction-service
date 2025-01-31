@@ -1,11 +1,16 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { createObjectCsvWriter } from 'csv-writer';
+import * as fs from 'fs';
+import { join } from 'path';
 
 import { Channel, connect, Connection, ConsumeMessage } from 'amqplib';
+import type { IAITRepository } from 'application/contracts/repositories/ait.repository';
 import { envs } from 'src/config/envs';
 
-interface QueueMessage {
+export type QueueMessage = {
   id: string;
-  url: string;
+  startDate: string;
+  endDate: string;
   timestamp: number;
 }
 
@@ -16,7 +21,9 @@ export class ProcessCSVConsumer implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(ProcessCSVConsumer.name);
   private readonly maxRetries = 3;
 
-  constructor() { }
+  constructor(
+    private readonly aitRepository: IAITRepository,
+  ) { }
 
   async onModuleInit() {
     try {
@@ -75,9 +82,42 @@ export class ProcessCSVConsumer implements OnModuleInit, OnModuleDestroy {
   }
 
   private async processMessage(message: QueueMessage): Promise<void> {
-    this.logger.debug(`Downloading from URL: ${message.url}`);
-    // Add your processing logic here
-    // If any error occurs, it will be caught by the try-catch in consumeQueue
+    const dirPath = join(__dirname, '..', '..', '..', 'exports');
+
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+
+    const startDate = new Date(message.startDate);
+    const endDate = new Date(message.endDate);
+
+    const result = await this.aitRepository.findByDateRange(startDate, endDate);
+
+    if (!result?.aits.length) {
+      this.logger.warn('No AITs found for the specified date range');
+      return;
+    }
+
+    const filePath = join(dirPath, `ait_export_${message.id}.csv`);
+
+    const csvWriter = createObjectCsvWriter({
+      path: filePath,
+      header: [
+        { id: 'placaVeiculo', title: 'Placa Veículo' },
+        { id: 'dataInfracao', title: 'Data Infração' },
+        { id: 'descricao', title: 'Descrição' },
+        { id: 'valorMulta', title: 'Valor Multa' },
+      ],
+      encoding: 'utf8',
+    });
+
+    await csvWriter.writeRecords(result.aits);
+
+    const csvContent = fs.readFileSync(filePath, 'utf-8');
+    const bom = '\uFEFF';
+    fs.writeFileSync(filePath, bom + csvContent, 'utf8');
+
+    this.logger.log(`CSV file generated successfully at: ${filePath}`);
   }
 
   private getRetryCount(msg: ConsumeMessage): number {
