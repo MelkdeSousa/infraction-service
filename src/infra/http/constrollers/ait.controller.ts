@@ -1,43 +1,40 @@
 import {
-  Controller,
-  Post,
-  Get,
-  Put,
-  Delete,
-  Body,
-  Param,
-  Query,
-  Req,
   BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
   NotFoundException,
+  Param,
+  Post,
+  Put,
+  Query
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AIT } from 'domain/ait.entity';
-import { CreateAITDto } from '../dtos/create-ait.dto';
-import { AITViewModel } from '../view-models/ait-view-model';
-import { UpdateAITDto } from '../dtos/update-ait.dto';
-import { IAITRepository } from 'application/contracts/repositories/ait.repository';
-import { ICreateAITContract } from 'application/contracts/usecases/create-ait.contract';
 import { Decimal } from '@prisma/client/runtime/library';
+import { ICreateAITContract } from 'application/contracts/usecases/create-ait.contract';
 import { IGetAITContract } from 'application/contracts/usecases/get-ait.contract';
-import { IUpdateAITContract } from 'application/contracts/usecases/update-ait.contract';
 import { IRemoveAITContract } from 'application/contracts/usecases/remove-ait.contract';
+import { IUpdateAITContract } from 'application/contracts/usecases/update-ait.contract';
 import { ProcessAITUseCase } from 'application/usecases/process-ait.usecase';
+import { AIT } from 'domain/ait.entity';
+import { CreateAITInputDto, type ProcessAitsInputDTO, type UpdateAITInputDto } from '../dtos/ait';
+import { AITViewModel } from '../view-models/ait-view-model';
 
 @ApiTags('AITs')
 @Controller('aits')
 export class AITController {
   constructor(
-    private createAit: ICreateAITContract,
-    private getAit: IGetAITContract,
-    private updateAit: IUpdateAITContract,
-    private removeAit: IRemoveAITContract,
-    private processAITUseCase: ProcessAITUseCase,
-  ) {}
+    private readonly createAit: ICreateAITContract,
+    private readonly getAit: IGetAITContract,
+    private readonly updateAit: IUpdateAITContract,
+    private readonly removeAit: IRemoveAITContract,
+    private readonly processAITUseCase: ProcessAITUseCase,
+  ) { }
   @ApiOperation({ summary: 'Create a new AIT' })
   @Post()
-  async create(@Body() body: CreateAITDto) {
+  async create(@Body() body: CreateAITInputDto) {
     const { placa_veiculo, data_infracao, descricao, valor_multa } = body;
 
     // Criar instância de AIT corretamente
@@ -104,7 +101,7 @@ export class AITController {
     description: 'The AIT has been updated successfully.',
   })
   @Put(':id')
-  async update(@Param('id') id: string, @Body() body: UpdateAITDto) {
+  async update(@Param('id') id: string, @Body() body: UpdateAITInputDto) {
     await this.updateAit.execute({ id, ait: body });
     return body;
   }
@@ -127,7 +124,9 @@ export class AITController {
     };
   }
 
-  @ApiOperation({ summary: 'Gets the list of processed AITs' })
+  @ApiOperation({
+    summary: 'Gets the list of processed AITs',
+  })
   @ApiResponse({
     status: 200,
     description: 'List of processed AITs',
@@ -137,7 +136,7 @@ export class AITController {
     description: 'Error while querying processed AITs',
   })
   @Post('gerar-csv')
-  async processAit(): Promise<string> {
-    return await this.processAITUseCase.processAndGenerateCsv();
+  async processAit(@Body() body: ProcessAitsInputDTO): Promise<string> {
+    return await this.processAITUseCase.processAndGenerateCsv(body);
   }
 }
