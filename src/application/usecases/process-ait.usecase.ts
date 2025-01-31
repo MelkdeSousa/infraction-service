@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { IAITRepository } from 'application/contracts/repositories/ait.repository';
 import { createObjectCsvWriter } from 'csv-writer'; // Importando o csv-writer
-import { join } from 'path'; // Para manipular caminhos de arquivos
 import * as fs from 'fs';
-import * as iconv from 'iconv-lite'; // Para garantir a codificação correta dos caracteres especiais
-import { RabbitMQProducer } from 'src/infra/broker/rabbitmq/rabbitmq.producer';
+import { join } from 'path'; // Para manipular caminhos de arquivos
+import { RabbitMQProducer } from 'src/infra/broker/rabbitmq/producer';
 
 @Injectable()
 export class ProcessAITUseCase {
   constructor(
     private readonly aitRepository: IAITRepository,
     private readonly rabbitMQProducer: RabbitMQProducer,
-  ) {}
+  ) { }
 
   async processAndGenerateCsv(): Promise<string> {
     const dirPath = join(__dirname, '..', '..', 'exports');
