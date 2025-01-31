@@ -1,4 +1,4 @@
-import { AIT } from 'domain/ait.entity';
+import type { AIT } from "@/domain/ait.entity";
 
 export class AITViewModel {
   static toHttp(ait: AIT) {

@@ -3,9 +3,9 @@ import { createObjectCsvWriter } from 'csv-writer';
 import * as fs from 'fs';
 import { join } from 'path';
 
+import type { IAITRepository } from '@/application/contracts/repositories/ait.repository';
+import { envs } from '@/config/envs';
 import { Channel, connect, Connection, ConsumeMessage } from 'amqplib';
-import type { IAITRepository } from 'application/contracts/repositories/ait.repository';
-import { envs } from 'src/config/envs';
 
 export type QueueMessage = {
   id: string;

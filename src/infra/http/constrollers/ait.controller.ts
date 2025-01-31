@@ -13,12 +13,13 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Decimal } from '@prisma/client/runtime/library';
-import { ICreateAITContract } from 'application/contracts/usecases/create-ait.contract';
-import { IGetAITContract } from 'application/contracts/usecases/get-ait.contract';
-import { IRemoveAITContract } from 'application/contracts/usecases/remove-ait.contract';
-import { IUpdateAITContract } from 'application/contracts/usecases/update-ait.contract';
-import { ProcessAITUseCase } from 'application/usecases/process-ait.usecase';
-import { AIT } from 'domain/ait.entity';
+
+import type { ICreateAITContract } from '@/application/contracts/usecases/create-ait.contract';
+import type { IGetAITContract } from '@/application/contracts/usecases/get-ait.contract';
+import type { IRemoveAITContract } from '@/application/contracts/usecases/remove-ait.contract';
+import type { IUpdateAITContract } from '@/application/contracts/usecases/update-ait.contract';
+import type { ProcessAITUseCase } from '@/application/usecases/process-ait.usecase';
+import { AIT } from '@/domain/ait.entity';
 import { CreateAITInputDto, type ProcessAitsInputDTO, type UpdateAITInputDto } from '../dtos/ait';
 import { AITViewModel } from '../view-models/ait-view-model';
 

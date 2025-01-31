@@ -1,4 +1,4 @@
-import { AIT } from 'domain/ait.entity';
+import { AIT } from '@/domain/ait.entity';
 
 interface RemoveAITRequest {
   id: string;

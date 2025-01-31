@@ -1,7 +1,5 @@
+import { AIT } from '@/domain/ait.entity';
 import { Ait as AITPrisma } from '@prisma/client'; // Modelo de AIT gerado pelo Prisma
-import { AIT } from 'domain/ait.entity';
-
-// Mapper para converter de Prisma para a entidade de domínio AIT
 
 export class AITMapper {
   // Método estático para mapear de Prisma para a entidade de domínio

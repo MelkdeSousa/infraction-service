@@ -1,5 +1,4 @@
 import { Decimal } from '@prisma/client/runtime/library';
-import { AIT } from 'domain/ait.entity';
 
 interface PutAitRequest {
   id: string;

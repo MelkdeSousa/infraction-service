@@ -1,5 +1,5 @@
+import type { ProcessAitsInputDTO } from '@infra/http/dtos/ait';
 import { Injectable } from '@nestjs/common';
-import type { ProcessAitsInputDTO } from 'infra/http/dtos/ait';
 import { RabbitMQProducer } from 'src/infra/broker/rabbitmq/producer';
 
 @Injectable()

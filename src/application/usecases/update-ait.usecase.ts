@@ -1,9 +1,8 @@
+import { IAITRepository } from '@/application/contracts/repositories/ait.repository';
+import { IUpdateAITContract } from '@/application/contracts/usecases/update-ait.contract';
 import { Injectable } from '@nestjs/common';
 import { Decimal } from '@prisma/client/runtime/library';
-import { IAITRepository } from 'application/contracts/repositories/ait.repository';
-import { IUpdateAITContract } from 'application/contracts/usecases/update-ait.contract';
 
-import { AIT } from 'domain/ait.entity';
 
 interface PutAitRequest {
   id: string;
@@ -16,16 +15,18 @@ interface PutAitRequest {
 }
 @Injectable()
 export class UpdateAITUseCase implements IUpdateAITContract {
-  constructor(private aitRepository: IAITRepository) {}
+  constructor(private aitRepository: IAITRepository) { }
 
   async execute(request: PutAitRequest): Promise<void> {
     const { id, ait } = request;
     const aitRequest = await this.aitRepository.findById(id);
-    aitRequest.updateAIT(
-      ait.placa_veiculo,
-      ait.data_infracao,
-      ait.descricao,
-      ait.valor_multa,
+    aitRequest.update(
+      {
+        dataInfracao: ait.data_infracao,
+        descricao: ait.descricao,
+        placaVeiculo: ait.placa_veiculo,
+        valorMulta: ait.valor_multa,
+      }
     );
     await this.aitRepository.update(id, aitRequest);
   }

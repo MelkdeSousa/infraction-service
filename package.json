@@ -1,6 +1,6 @@
 {
   "name": "teste",
-  "version": "1",
+  "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "description": "teste back end",
@@ -20,6 +20,7 @@
     "fs-extra": "^11.3.0",
     "iconv-lite": "^0.6.3",
     "kafkajs": "^2.2.4",
+    "module-alias": "^2.2.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1",
@@ -44,5 +45,14 @@
     "@types/amqplib": "^0.10.6",
     "@types/node": "^22.12.0",
     "prisma": "^6.2.1"
+  },
+  "_moduleAliases": {
+    "@": "dist",
+    "@domain": "dist/domain",
+    "@application": "dist/application",
+    "@infra": "dist/infra",
+    "@config": "dist/config",
+    "@shared": "dist/shared",
+    "@utils": "dist/utils"
   }
 }

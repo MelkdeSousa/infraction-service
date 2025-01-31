@@ -1,4 +1,4 @@
-import { AIT } from 'domain/ait.entity';
+import { AIT } from '@/domain/ait.entity';
 
 export abstract class ICreateAITContract {
   abstract execute(request: AIT);

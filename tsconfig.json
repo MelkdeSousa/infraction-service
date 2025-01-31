@@ -8,15 +8,33 @@
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
     "sourceMap": true,
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "outDir": "./dist",
-    "baseUrl": "./", 
+    "baseUrl": ".",
     "paths": {
-      "infra/http/*": ["src/infra/http/*"],  // Mapeia a subpasta 'http'
-      "infra/database/*": ["src/infra/database/*"],  // Mapeia a subpasta 'database'
-      "infra/repositories/*": ["src/infra/repositories/*"],  // Mapeia a subpasta 'repositories'
-      "application/*": ["src/application/*"],  // Mapeia 'application/*'
-      "domain/*": ["src/domain/*"]  // Mapeia 'domain/*'
+      "@/*": [
+        "src/*"
+      ],
+      "@domain/*": [
+        "src/domain/*"
+      ],
+      "@application/*": [
+        "src/application/*"
+      ],
+      "@infra/*": [
+        "src/infra/*"
+      ],
+      "@config/*": [
+        "src/config/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ]
     },
     "incremental": true,
     "skipLibCheck": true,
@@ -26,6 +44,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
   },
-  "include": ["src/**/*"],  // Incluir todos os arquivos dentro da pasta 'src'
-  "exclude": ["node_modules", "dist"]  // Excluir a pasta 'node_modules' e 'dist'
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

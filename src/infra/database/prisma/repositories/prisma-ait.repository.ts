@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
 import {
   GetListAitsResponse,
   IAITRepository,
-} from 'application/contracts/repositories/ait.repository';
+} from '@/application/contracts/repositories/ait.repository';
+import { Injectable } from '@nestjs/common';
 
-import { AIT } from 'domain/ait.entity';
+import { AIT } from '@/domain/ait.entity';
 import { AITMapper } from '../mappers/prisma-ait.mapper';
 import { PrismaService } from '../prisma.service';
 
