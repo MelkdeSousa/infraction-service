@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model AIT {
+model Ait {
   id            String   @id @default(uuid())
   placa_veiculo String
   data_infracao DateTime
